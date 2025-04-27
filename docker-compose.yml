@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    image: nextjs-app
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: "npm run dev"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PRIVATE_TURBOPACK=0
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    image: fastapi-app
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    command: "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    # environment:
+    #   - DATABASE_URL=postgresql://postgres:password@db:5432/mydb
+    # depends_on:
+    #   - db
+# db:
+#   image: postgres:13
+#   environment:
+#     - POSTGRES_DB=mydb
+#     - POSTGRES_USER=postgres
+#     - POSTGRES_PASSWORD=password
+#   volumes:
+#     - pgdata:/var/lib/postgresql/data
+#   ports:
+#     - "5432:5432"
+
+# volumes:
+#   pgdata:
